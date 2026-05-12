@@ -1,8 +1,9 @@
-import Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
-const SYSTEM_PROMPT = `You are a recipe extraction assistant. Given a video transcript or post caption, extract the complete recipe and return it as valid JSON only (no markdown, no explanation, no backticks).
+const PROMPT_PREFIX = `You are a recipe extraction assistant. Given a video transcript or post caption, extract the complete recipe and return it as valid JSON only (no markdown, no explanation, no backticks).
 
 Return this exact structure:
 {
@@ -26,21 +27,21 @@ Rules:
 - amounts as strings (e.g. "1/2", "100", "a handful")
 - unit can be: g, kg, ml, l, tsp, tbsp, cup, unidade, dente, folha, pitada, or empty string
 - If no clear recipe is found, return { "error": "No recipe found" }
-- Always respond in the same language as the transcript`
+- Always respond in the same language as the transcript
+
+Extract the recipe from this content:
+
+`
 
 export async function extractRecipeFromText(text: string) {
-  const message = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 2000,
-    system: SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: `Extract the recipe from this content:\n\n${text}` }],
-  })
+  const result = await model.generateContent(PROMPT_PREFIX + text)
+  const raw = result.response.text().trim()
 
-  const content = message.content[0]
-  if (content.type !== 'text') throw new Error('Unexpected response from AI')
+  // Strip markdown code blocks if present
+  const cleaned = raw.replace(/^```json\n?/, '').replace(/^```\n?/, '').replace(/\n?```$/, '').trim()
 
   try {
-    const parsed = JSON.parse(content.text)
+    const parsed = JSON.parse(cleaned)
     if (parsed.error) throw new Error('Nenhuma receita encontrada no vídeo.')
     return parsed
   } catch {
