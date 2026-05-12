@@ -10,8 +10,6 @@ services:
         sync: false
       - key: RAPIDAPI_KEY
         sync: false
-      - key: RAPIDAPI_TIKTOK_HOST
-        value: tiktok-scraper7.p.rapidapi.com
       - key: RAPIDAPI_INSTAGRAM_HOST
         value: instagram-scraper-api2.p.rapidapi.com
       - key: FIREBASE_PROJECT_ID
