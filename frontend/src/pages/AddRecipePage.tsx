@@ -14,6 +14,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export default function AddRecipePage() {
   const [url, setUrl] = useState('')
+  const [language, setLanguage] = useState('pt')
   const [loading, setLoading] = useState(false)
   const [recipe, setRecipe] = useState<any>(null)
   const [isPublic, setIsPublic] = useState(false)
@@ -26,7 +27,7 @@ export default function AddRecipePage() {
     setLoading(true)
     setRecipe(null)
     try {
-      const { data } = await api.post('/api/recipes/extract', { url })
+      const { data } = await api.post('/api/recipes/extract', { url, language })
       setRecipe(data)
     } catch (err: any) {
       const code = err.response?.data?.code
@@ -59,7 +60,7 @@ export default function AddRecipePage() {
       <h1 className="text-2xl font-bold mb-6">Adicionar Receita</h1>
 
       {/* URL Input */}
-      <div className="flex gap-2 mb-8">
+      <div className="flex gap-2 mb-2">
         <div className="relative flex-1">
           <Link2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
           <input
@@ -80,6 +81,26 @@ export default function AddRecipePage() {
           {loading ? <Loader2 size={18} className="animate-spin" /> : <ChefHat size={18} />}
           {loading ? 'A extrair...' : 'Extrair'}
         </button>
+      </div>
+
+      {/* Language selector */}
+      <div className="flex items-center gap-2 mb-8">
+        <span className="text-xs text-gray-500">Língua da receita:</span>
+        {[
+          { code: 'pt', label: '🇵🇹 Português' },
+          { code: 'en', label: '🇬🇧 English' },
+          { code: 'es', label: '🇪🇸 Español' },
+          { code: 'fr', label: '🇫🇷 Français' },
+        ].map(l => (
+          <button
+            key={l.code}
+            onClick={() => setLanguage(l.code)}
+            className={`text-xs px-2 py-1 rounded-lg transition-colors ${language === l.code ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
+            style={language === l.code ? { background: '#315675' } : { background: 'transparent' }}
+          >
+            {l.label}
+          </button>
+        ))}
       </div>
 
       {/* Loading state */}

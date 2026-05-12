@@ -30,7 +30,7 @@ async function getUserPlanData(userId: string) {
 
 // POST /api/recipes/extract — extract recipe from video URL (no save yet)
 recipesRouter.post('/extract', requireAuth, async (req: AuthRequest, res) => {
-  const { url } = req.body
+  const { url, language } = req.body
   if (!url) return res.status(400).json({ error: 'URL é obrigatório' })
 
   try {
@@ -47,7 +47,7 @@ recipesRouter.post('/extract', requireAuth, async (req: AuthRequest, res) => {
 
     const source = detectSource(url)
     const text = await extractVideoText(url, source)
-    const recipe = await extractRecipeFromText(text)
+    const recipe = await extractRecipeFromText(text, language || 'pt')
 
     await db.collection('users').doc(req.userId!).update({
       extractionsThisMonth: FieldValue.increment(1),

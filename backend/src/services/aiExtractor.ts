@@ -27,14 +27,23 @@ Rules:
 - amounts as strings (e.g. "1/2", "100", "a handful")
 - unit can be: g, kg, ml, l, tsp, tbsp, cup, unidade, dente, folha, pitada, or empty string
 - If no clear recipe is found, return { "error": "No recipe found" }
-- Always respond in the same language as the transcript
+- Always respond in the specified language, regardless of the transcript's language
 
-Extract the recipe from this content:
+Extract the recipe from this content (respond in {LANGUAGE}):
 
 `
 
-export async function extractRecipeFromText(text: string) {
-  const result = await model.generateContent(PROMPT_PREFIX + text)
+const LANGUAGE_NAMES: Record<string, string> = {
+  pt: 'Portuguese',
+  en: 'English',
+  es: 'Spanish',
+  fr: 'French',
+}
+
+export async function extractRecipeFromText(text: string, language = 'pt') {
+  const langName = LANGUAGE_NAMES[language] || 'Portuguese'
+  const prompt = PROMPT_PREFIX.replace('{LANGUAGE}', langName) + text
+  const result = await model.generateContent(prompt)
   const raw = result.response.text().trim()
 
   // Strip markdown code blocks if present
