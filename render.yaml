@@ -6,8 +6,6 @@ services:
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
-      - key: PORT
-        value: 3001
       - key: ANTHROPIC_API_KEY
         sync: false
       - key: RAPIDAPI_KEY
