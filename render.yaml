@@ -11,7 +11,7 @@ services:
       - key: RAPIDAPI_KEY
         sync: false
       - key: RAPIDAPI_INSTAGRAM_HOST
-        value: instagram-scraper-api2.p.rapidapi.com
+        value: instagram-api-fast-reliable-data-scraper.p.rapidapi.com
       - key: FIREBASE_PROJECT_ID
         sync: false
       - key: FIREBASE_PRIVATE_KEY

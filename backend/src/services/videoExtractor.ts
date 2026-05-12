@@ -48,7 +48,7 @@ async function extractTikTok(url: string): Promise<string> {
 }
 
 async function extractInstagram(url: string): Promise<string> {
-  const host = process.env.RAPIDAPI_INSTAGRAM_HOST || 'instagram-scraper-api2.p.rapidapi.com'
+  const host = process.env.RAPIDAPI_INSTAGRAM_HOST || 'instagram-api-fast-reliable-data-scraper.p.rapidapi.com'
   try {
     const response = await axios.get(`https://${host}/v1/post_info`, {
       params: { code_or_id_or_url: url },
@@ -58,7 +58,8 @@ async function extractInstagram(url: string): Promise<string> {
       },
       timeout: 10000,
     })
-    const caption = response.data?.data?.caption
+    const data = response.data?.data
+    const caption = data?.caption || data?.edge_media_to_caption?.edges?.[0]?.node?.text
     if (!caption) throw new Error()
     return caption
   } catch (err: any) {
