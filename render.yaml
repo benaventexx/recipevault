@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: recipevault-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: RAPIDAPI_KEY
+        sync: false
+      - key: RAPIDAPI_TIKTOK_HOST
+        value: tiktok-scraper7.p.rapidapi.com
+      - key: RAPIDAPI_INSTAGRAM_HOST
+        value: instagram-scraper-api2.p.rapidapi.com
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false

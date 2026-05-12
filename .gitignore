@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Build outputs
+dist/
+frontend/dist/
+build/
+
+# Environment variables (NEVER commit these)
+.env
+.env.local
+.env.*.local
+backend/.env
+frontend/.env
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# TypeScript
+*.tsbuildinfo
