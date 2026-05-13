@@ -101,8 +101,10 @@ recipesRouter.get('/', requireAuth, async (req: AuthRequest, res) => {
     let query = db.collection('recipes').where('userId', '==', req.userId)
     if (category) query = query.where('category', '==', category)
     if (done !== undefined) query = query.where('isDone', '==', done === 'true')
-    const snap = await query.orderBy('createdAt', 'desc').get()
-    const recipes = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+    const snap = await query.get()
+    const recipes = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a: any, b: any) => (b.createdAt?.toMillis?.() ?? 0) - (a.createdAt?.toMillis?.() ?? 0))
     res.json(recipes)
   } catch (err: any) {
     res.status(500).json({ error: err.message })

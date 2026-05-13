@@ -22,6 +22,7 @@ export default function MyRecipesPage() {
     if (showDone !== null) params.done = showDone
     api.get('/api/recipes', { params })
       .then(r => setRecipes(r.data))
+      .catch(() => setRecipes([]))
       .finally(() => setLoading(false))
   }, [category, showDone])
 
